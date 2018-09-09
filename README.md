@@ -1,4 +1,7 @@
 ===============================================================
+
+## Introduce
+
 This C++11 code implements this source code:
 
 https://sourceforge.net/projects/ezsift/
@@ -14,6 +17,7 @@ detection and matching on NEON and MALI GPUs. In order to compile
 the code for the NEON Technology, only in the main.cpp file, 
 these two lines must be uncommented:
 
+```
 #define SIFTType arm_compute::NEEZSIFT
 const char *ALGNAME = "NE_";
 
@@ -21,6 +25,8 @@ Likewise for the Mali GPU the -DARM_COMPUTE_CL=1 compile switch
 must be one and also uncommented these lines:
 #define SIFTType arm_compute::CLEZSIFT
 const char *ALGNAME = "CL_";
+
+```
 
 This will automatically build the code for NEON or Mali. 
 Basically, this new version of the code uses C++ templates 
@@ -33,5 +39,34 @@ prefixes. In both cases, only the computation of images hierarchies
 are performed either on the NEON or Mali, the rest of the computation 
 is performed on the CPU.
 
+### How TO
+
 ComputeLibrary : v17.05
 OpenCV : 3.4.3
+
+Compile ComputeLibrary
+
+```
+git clone https://github.com/ARM-software/ComputeLibrary
+git chekcout v17.05
+scons Werror=1 debug=0 asserts=0 neon=1 opencl=1 os=linux arch=armv7a examples=0 embed_kernels=1
+```
+
+Compile opencv 3.4.3
+
+```
+git clone https://github.com/opencv/opencv
+git chekcout 3.4.3
+
+git clone https://github.com/opencv/opencv_contrib
+git chekcout 3.4.3
+
+cd opencv 
+mkdir build && cd build
+cmake -D CMAKE_BUILD_TYPE=RELEASE \
+        -D CMAKE_INSTALL_PREFIX=/usr/local \
+        -D INSTALL_PYTHON_EXAMPLES=OFF\
+        -D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules \
+        -D BUILD_EXAMPLES=OFF ..
+
+```
