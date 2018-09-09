@@ -157,7 +157,7 @@ int draw_kpt_list_on_image(
   text.draw(_inimg, cv::Point(30, 30), std::to_string(work_fps) + "  detection time");
 
   // Generate output image with keypoints drawing
-  const std::string img_kpt_filename = std::string(ALGNAME) + std::string(file) + "_psift_output.ppm";
+  const std::string img_kpt_filename = std::string(ALGNAME) + std::string(file) + "_psift_output.jpg";
   cv::imwrite(img_kpt_filename.c_str(), _inimg);
   return 0;
 }
@@ -236,7 +236,10 @@ int draw_match_lines_to_ppm_file(
   Text text(CV_FONT_HERSHEY_SIMPLEX, 1.0, cv::Scalar(0, 0, 255), 2);
   text.draw(_outimg, cv::Point(30, 60), std::to_string(work_fps) + "  matching time");
 
-  cv::imwrite(filename.c_str(), _outimg);
+  std::vector<int> params;
+  params.push_back(cv::IMWRITE_PXM_BINARY);
+  params.push_back(0);
+  cv::imwrite(filename.c_str(), _outimg, params);
 
   return 0;
 }
@@ -252,7 +255,7 @@ int main(int argc, char* argv[])
   // Create the named window.
   ////////////////////////////////////////////////////////////////////////
   const std::string window_title = "ne_ezsift";
-  cv::namedWindow(window_title, CV_WINDOW_NORMAL);
+//  cv::namedWindow(window_title, CV_WINDOW_NORMAL);
 
   cv::Mat curRGBImg1, curRGBImg2;
   cv::Mat curGrayImgIn1, curGrayImgIn2;
@@ -324,7 +327,7 @@ int main(int argc, char* argv[])
 
   // Draw result image.
   {
-    const std::string img_match_filename = std::string(ALGNAME) + "A_B_matching.ppm";
+    const std::string img_match_filename = std::string(ALGNAME) + "A_B_matching.jpg";
     draw_match_lines_to_ppm_file(img_match_filename, curGrayImgMatch, curGrayImgIn1, curGrayImgIn2, match_list);
     std::cout << "# of matched keypoints: " << match_list.size() << "\n";
   }
@@ -337,12 +340,12 @@ int main(int argc, char* argv[])
   //     - Show the streaming image
   //     - Exit the main loop; Hit the 'q' key.
   ////////////////////////////////////////////////////////////////////////
-  while (kb_input != 'q') {
+//  while (kb_input != 'q') {
 	// Show the input image
-    cv::imshow(window_title, curGrayImgMatch);
+//    cv::imshow(window_title, curGrayImgMatch);
     // Waiting for pressing a key by user
-    kb_input = cv::waitKey(keywait_ms);
-  }
+//    kb_input = cv::waitKey(keywait_ms);
+ // }
 
   return 0;
 }

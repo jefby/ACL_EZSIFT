@@ -20,26 +20,33 @@ SRC_PATH 	= .
 SRCS		= $(wildcard $(SRC_PATH)/*.cpp)
 OBJS 		= $(SRCS:$(SRC_PATH)/%.cpp=$(OBJ_PATH)/%.o)
 
+COMPUTELIBRARY_PATH =  /home/pi/work/ComputeLibrary
+
 INCS	+= -I.
 INCS	+= -I/usr/local/include
-INCS	+= -I/home/odroid/acl/ComputeLibrary-master
-INCS	+= -I/home/odroid/acl/ComputeLibrary-master/include
+INCS	+= -I$(COMPUTELIBRARY_PATH)
+INCS	+= -I$(COMPUTELIBRARY_PATH)/include
 
-CXXFLAGS = $(INCS) -c -O2 -std=c++11 -mcpu=cortex-a8 -mfpu=neon #-DARM_COMPUTE_CL=1 #-fpermissive #-W -Wall -O0
-	
+CXXFLAGS = $(INCS) -c -O2 -std=c++11 -mcpu=cortex-a8 -mfpu=neon  -fpermissive
+
+
+CXXFLAGS += -Wno-deprecated-declarations -Wall -DARCH_ARM -Wextra -Wno-unused-parameter -pedantic -Wdisabled-optimization -Wformat=2 -Winit-self -Wstrict-overflow=2 -Wswitch-default -fpermissive -std=gnu++11 -Wno-vla -Woverloaded-virtual -Wctor-dtor-privacy -Wsign-promo -Weffc++ -Wno-format-nonliteral -Wno-overlength-strings -Wno-strict-overflow -Wlogical-op -Wnoexcept -Wstrict-null-sentinel 
+
 # 	Link Options
+LIVDIRS     += -L$(COMPUTELIBRARY_PATH)/build/arm_compute -L/usr/local/lib -L${COMPUTELIBRARY_PATH}/build/opencl-1.2-stubs/
 LIBS		+= -lpthread
 
 LIBS		+= -larm_compute
+LIBS		+= -larm_compute_core
 LIBS		+= -lOpenCL
 
 #LIVDIRS     += -L$(OPENCV_LIB_PATH)
-LIVDIRS     += -L/home/odroid/acl/ComputeLibrary-master/build
-LIBS 		+= -lopencv_contrib
+#LIBS 		+= -lopencv_contrib
 LIBS 		+= -lopencv_core
 LIBS 		+= -lopencv_highgui
 LIBS 		+= -lopencv_imgproc
-LIBS 		+= -lopencv_legacy
+LIBS 		+= -lopencv_imgcodecs
+#LIBS 		+= -lopencv_legacy
 LIBS 		+= -lopencv_video
 LIBS 		+= -lopencv_videostab
 

@@ -33,3 +33,5 @@ prefixes. In both cases, only the computation of images hierarchies
 are performed either on the NEON or Mali, the rest of the computation 
 is performed on the CPU.
 
+ComputeLibrary : v17.05
+OpenCV : 3.4.3
