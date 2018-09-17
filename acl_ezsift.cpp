@@ -148,9 +148,9 @@ void EZSIFT<tensor,scale,conv,conv_matrix_size,absdif,deriv,gradrot>::scratch_pa
 #ifdef ARM_COMPUTE_CL
   if(std::is_same<typename std::decay<tensor>::type, CLTensor>::value)
   {
-    CLKernelLibrary::get().init("/home/odroid/acl/ComputeLibrary-master/src/core/CL/cl_kernels/", cl::Context::getDefault(), cl::Device::getDefault());
-    CLScheduler::get().init(cl::Context::getDefault(), cl::CommandQueue::getDefault());
-//    CLScheduler::get().default_init();
+    //CLKernelLibrary::get().init("/home/odroid/acl/ComputeLibrary-master/src/core/CL/cl_kernels/", cl::Context::getDefault(), cl::Device::getDefault());
+    //CLScheduler::get().init(cl::Context::getDefault(), cl::CommandQueue::getDefault());
+    CLScheduler::get().default_init();
   }
 #endif
 
@@ -199,8 +199,9 @@ void EZSIFT<tensor,scale,conv,conv_matrix_size,absdif,deriv,gradrot>::init(const
 #ifdef ARM_COMPUTE_CL
   if(std::is_same<typename std::decay<tensor>::type, CLTensor>::value)
   {
-    CLKernelLibrary::get().init("/home/odroid/acl/ComputeLibrary-master/src/core/CL/cl_kernels/", cl::Context::getDefault(), cl::Device::getDefault());
-    CLScheduler::get().init(cl::Context::getDefault(), cl::CommandQueue::getDefault());
+    //CLKernelLibrary::get().init("/home/odroid/acl/ComputeLibrary-master/src/core/CL/cl_kernels/", cl::Context::getDefault(), cl::Device::getDefault());
+    //CLScheduler::get().init(cl::Context::getDefault(), cl::CommandQueue::getDefault());
+    CLScheduler::get().default_init();
   }
 #endif
 

@@ -27,6 +27,9 @@ Revision history:
 #ifndef __ARM_COMPUTE_NEON_EZSIFT_H__
 #define __ARM_COMPUTE_NEON_EZSIFT_H__
 
+#define ARM_COMPUTE_CL
+#define ARM_COMPUTE_DEBUG_ENABLED
+
 #include "arm_compute/runtime/NEON/NEFunctions.h"
 #include "arm_compute/runtime/CL/CLFunctions.h"
 #include "arm_compute/runtime/CL/CLScheduler.h"
@@ -48,6 +51,7 @@ Revision history:
 #include <cstdlib>
 #include <cstring>
 #include <fstream>
+
 
 /****************************************
  * Constant parameters

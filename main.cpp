@@ -34,10 +34,10 @@ Revision history:
 
 using namespace arm_compute;
 
-//#define SIFTType arm_compute::CLEZSIFT
-//const char *ALGNAME = "CL_";
-#define SIFTType arm_compute::NEEZSIFT
-const char *ALGNAME = "NE_";
+#define SIFTType arm_compute::CLEZSIFT
+const char *ALGNAME = "CL_";
+//#define SIFTType arm_compute::NEEZSIFT
+//const char *ALGNAME = "NE_";
 
 int64 work_begin;
 double work_fps;
@@ -293,6 +293,7 @@ int main(int argc, char* argv[])
     WorkBegin();
     ezSIFT.sift(kpt_list1);        // Perform NEON EZSIFT computation
     WorkEnd();
+    std::cout << "\nImage1 takes : \t\t" << work_fps << "\n";
     // Generate keypoints list
     const std::string img_kpt_filename = std::string(ALGNAME) + std::string(file1) + "_psift_key.key";
     export_kpt_list_to_file(img_kpt_filename, kpt_list1, false);
@@ -313,6 +314,8 @@ int main(int argc, char* argv[])
     const std::string img_kpt_filename = std::string(ALGNAME) + std::string(file2) + "_psift_key.key";
     export_kpt_list_to_file(img_kpt_filename, kpt_list2, false);
     std::cout << "\nImage2 total keypoints number: \t\t" << kpt_list2.size() << "\n";
+    std::cout << "\nImage2 takes : \t\t" << work_fps << "\n";
+
     draw_kpt_list_on_image(
          file2,
          curGrayImgIn2,
