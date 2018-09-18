@@ -20,7 +20,7 @@ Revision history:
 #include <queue>
 
 #include <cstdlib>
-#include <cstring>
+//#include <cstring>
 #include <fstream>
 #include <iostream>
 #include <math.h>
@@ -32,12 +32,17 @@ Revision history:
 
 #include "acl_ezsift.h"
 
-using namespace arm_compute;
+#include "TimeUtil.h"
 
-#define SIFTType arm_compute::CLEZSIFT
-const char *ALGNAME = "CL_";
-//#define SIFTType arm_compute::NEEZSIFT
-//const char *ALGNAME = "NE_";
+#include <string>
+
+using namespace arm_compute;
+using namespace std;
+
+// #define SIFTType arm_compute::CLEZSIFT
+// const char *ALGNAME = "CL_";
+#define SIFTType arm_compute::NEEZSIFT
+const char *ALGNAME = "NE_";
 
 int64 work_begin;
 double work_fps;
@@ -154,7 +159,7 @@ int draw_kpt_list_on_image(
   }
   // Create the Text instance.
   Text text(CV_FONT_HERSHEY_SIMPLEX, 1.0, cv::Scalar(0, 0, 255), 2);
-  text.draw(_inimg, cv::Point(30, 30), std::to_string(work_fps) + "  detection time");
+  text.draw(_inimg, cv::Point(30, 30), to_string(work_fps) + "  detection time");
 
   // Generate output image with keypoints drawing
   const std::string img_kpt_filename = std::string(ALGNAME) + std::string(file) + "_psift_output.jpg";
@@ -234,7 +239,7 @@ int draw_match_lines_to_ppm_file(
 
   // Create the Text instance.
   Text text(CV_FONT_HERSHEY_SIMPLEX, 1.0, cv::Scalar(0, 0, 255), 2);
-  text.draw(_outimg, cv::Point(30, 60), std::to_string(work_fps) + "  matching time");
+  text.draw(_outimg, cv::Point(30, 60), to_string(work_fps) + "  matching time");
 
   std::vector<int> params;
   params.push_back(cv::IMWRITE_PXM_BINARY);
@@ -288,12 +293,12 @@ int main(int argc, char* argv[])
   // Compute SIFT
   ////////////////////////////////////////////////////////////////////////
   {
-	SIFTType ezSIFT; // Instantiate the NEON EZSIFT
+    SIFTType ezSIFT; // Instantiate the NEON EZSIFT
     ezSIFT.init(curGrayImgIn1);    // Init the NEON EZSIFT parameters
-    WorkBegin();
+    TimeUtil t; 
     ezSIFT.sift(kpt_list1);        // Perform NEON EZSIFT computation
-    WorkEnd();
-    std::cout << "\nImage1 takes : \t\t" << work_fps << "\n";
+    t.end();
+    std::cout << "\nImage1 takes : \t\t" << t.getTime()<< "\n";
     // Generate keypoints list
     const std::string img_kpt_filename = std::string(ALGNAME) + std::string(file1) + "_psift_key.key";
     export_kpt_list_to_file(img_kpt_filename, kpt_list1, false);
@@ -305,16 +310,17 @@ int main(int argc, char* argv[])
   }
 
   {
-	SIFTType ezSIFT; // Instantiate the NEON EZSIFT
+    SIFTType ezSIFT; // Instantiate the NEON EZSIFT
     ezSIFT.init(curGrayImgIn2);    // Init the NEON EZSIFT parameters
-    WorkBegin();
+    TimeUtil t;
+    t.begin();
     ezSIFT.sift(kpt_list2);        // Perform NEON EZSIFT computation
-    WorkEnd();
+    t.end();
     // Generate keypoints list
-    const std::string img_kpt_filename = std::string(ALGNAME) + std::string(file2) + "_psift_key.key";
-    export_kpt_list_to_file(img_kpt_filename, kpt_list2, false);
+    // const std::string img_kpt_filename = std::string(ALGNAME) + std::string(file2) + "_psift_key.key";
+    // export_kpt_list_to_file(img_kpt_filename, kpt_list2, false);
     std::cout << "\nImage2 total keypoints number: \t\t" << kpt_list2.size() << "\n";
-    std::cout << "\nImage2 takes : \t\t" << work_fps << "\n";
+    std::cout << "\nImage2 takes : \t\t" << t.getTime() << "\n";
 
     draw_kpt_list_on_image(
          file2,

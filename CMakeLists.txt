@@ -1,0 +1,29 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+
+PROJECT("acl_ezsift")
+
+set (COMPUTELIBRARY_PATH "/home/parallels/work/ComputeLibrary/")
+
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+
+set(ENABLE_PRECOMPILED_HEADERS OFF)
+
+set(MY_OPENCV_ROOT "/media/psf/Home/work/opencv_sdk_android_arm64_armv7")
+set(OpenCV_DIR "${MY_OPENCV_ROOT}/sdk/native/jni")
+find_package(OpenCV REQUIRED)
+message(STATUS "OpenCV libraries: ${OpenCV_LIBS}")
+
+INCLUDE_DIRECTORIES(${OpenCV_INCLUDE_DIRS})
+
+INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/)
+INCLUDE_DIRECTORIES(${PROJECT_SOURCE_DIR}/include/)
+
+INCLUDE_DIRECTORIES(${COMPUTELIBRARY_PATH})
+INCLUDE_DIRECTORIES(${COMPUTELIBRARY_PATH}/include)
+
+LINK_DIRECTORIES(${PROJECT_SOURCE_DIR}/lib/)
+LINK_DIRECTORIES(${COMPUTELIBRARY_PATH}/build/arm_compute/)
+
+ADD_EXECUTABLE(acl_ezsift main.cpp acl_ezsift.cpp)
+TARGET_LINK_LIBRARIES(acl_ezsift arm_compute-static OpenCL ${OpenCV_LIBS})

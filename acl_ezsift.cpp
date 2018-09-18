@@ -58,7 +58,7 @@ Revision history:
 #include "test_helpers/Utils.h"
 
 using namespace arm_compute;
-
+using namespace std;
 
 void NEGradRot::configure(const ITensor *input1, const ITensor *input2, ITensor *outputMag, ITensor *outputPhase, bool use_fp16)
 {
@@ -168,9 +168,9 @@ void EZSIFT<tensor,scale,conv,conv_matrix_size,absdif,deriv,gradrot>::scratch_pa
   _scale_octave.run();
   CLScheduler::get().sync();
 
-  const std::string output_filename = "test.ppm";
+  // const std::string output_filename = "test.ppm";
 //  arm_compute::write_ppm<tensor>(*(_octaves.get() + 0), output_filename);
-  arm_compute::write_ppm<tensor>(_tst_out_img, output_filename);
+  // arm_compute::write_ppm<tensor>(_tst_out_img, output_filename);
 
   return;
 }
@@ -362,7 +362,7 @@ void EZSIFT<tensor,scale,conv,conv_matrix_size,absdif,deriv,gradrot>::dump_octav
 
   for(size_t i = 0; i < _nOctaves; ++i){
 	tensor *tempTensor = get_octave(i);
-    const std::string output_filename = "octave_Octave-" + std::to_string(i) + ".ppm";
+    const std::string output_filename = "octave_Octave-" + to_string(i) + ".ppm";
     arm_compute::write_ppm<tensor>(*tempTensor, output_filename);
   }
 }
@@ -406,7 +406,7 @@ void EZSIFT<tensor,scale,conv,conv_matrix_size,absdif,deriv,gradrot>::dump_gauss
   for (int i = 0; i < _nOctaves; i++){
     for (int j = 0; j < _nGpyrLayers; j++){
       tensor *tempTensor = get_gaussian_pyramid(i,j);
-      const std::string output_filename = "gpyr-" + std::to_string(i) + "-" + std::to_string(j) + ".ppm";
+      const std::string output_filename = "gpyr-" + to_string(i) + "-" + to_string(j) + ".ppm";
       arm_compute::write_ppm<tensor>(*tempTensor, output_filename);
     }
   }
@@ -527,7 +527,7 @@ void EZSIFT<tensor,scale,conv,conv_matrix_size,absdif,deriv,gradrot>::dump_dog_p
   for (int i = 0; i < _nOctaves; i++){
     for (int j = 0; j < _nDogLayers; j++){
       tensor *tempTensor = get_dog_pyramid(i,j);
-      const std::string output_filename = "dog_Octave-" + std::to_string(i) + "_Layer-" + std::to_string(j) + ".ppm";
+      const std::string output_filename = "dog_Octave-" + to_string(i) + "_Layer-" + to_string(j) + ".ppm";
       arm_compute::write_ppm<tensor>(*tempTensor, output_filename);
     }
   }
