@@ -34,6 +34,11 @@ Revision history:
 
 #include "TimeUtil.h"
 
+#include <opencv2/opencv.hpp>
+#include <opencv2/xfeatures2d.hpp>
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 #include <string>
 
 using namespace arm_compute;
@@ -208,6 +213,19 @@ int combine_image(
   return 0;
 }
 
+static cv::Ptr<cv::xfeatures2d::SIFT> detector;
+bool extractWithOpencvSift(const cv::Mat &img)
+{
+  TimeUtil t;
+  t.begin();
+  std::vector<cv::KeyPoint> viewFeaturePts;
+  cv::Mat viewFeatureDesc;
+  detector->detectAndCompute(img, cv::Mat(), viewFeaturePts, viewFeatureDesc);
+  t.end();
+  std::cout << "detectAndCompute sift takes " << t.getTime() << std::endl;
+  return true;
+}
+
 // Draw match lines between matched keypoints between two images.
 int draw_match_lines_to_ppm_file(
 	const std::string &filename,
@@ -326,6 +344,12 @@ int main(int argc, char* argv[])
          file2,
          curGrayImgIn2,
          kpt_list2);
+  }
+
+  {
+    detector = cv::xfeatures2d::SIFT::create(3000);
+    extractWithOpencvSift(curGrayImgIn1);
+    extractWithOpencvSift(curGrayImgIn2);
   }
 
   // Match keypoints.

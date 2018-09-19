@@ -57,6 +57,8 @@ Revision history:
 
 #include "test_helpers/Utils.h"
 
+#include "TimeUtil.h"
+
 using namespace arm_compute;
 using namespace std;
 
@@ -160,7 +162,7 @@ void EZSIFT<tensor,scale,conv,conv_matrix_size,absdif,deriv,gradrot>::scratch_pa
   _tst_in_img.allocator()->init(TensorInfo(640, 480, Format::U8));
   _tst_in_img.allocator()->allocate();
   tensor _tst_out_img;
-  _tst_out_img.allocator()->init(TensorInfo(640*2, 480*2, Format::U8));
+  _tst_out_img.allocator()->init(TensorInfo(640 * 2, 480 * 2, Format::U8));
   _tst_out_img.allocator()->allocate();
 
   _scale_octave.configure(&_tst_in_img, &_tst_out_img, InterpolationPolicy::NEAREST_NEIGHBOR, BorderMode::UNDEFINED);
@@ -1567,32 +1569,45 @@ void EZSIFT<tensor,scale,conv,conv_matrix_size,absdif,deriv,gradrot>::extract_de
 template <typename tensor,class scale,class conv,unsigned int conv_matrix_size,class absdif,class deriv,class gradrot>
 int EZSIFT<tensor,scale,conv,conv_matrix_size,absdif,deriv,gradrot>::sift(std::list<SiftKeypoint> & kpt_list)
 {
+  TimeUtil t;
   // Build image octaves
   build_octaves();
+  t.end();
+  t.printTime("build_octaves");
 #if (DUMP_OCTAVE_IMAGE == 1)
   // Make sure all the OpenCL jobs are done executing:
   CLScheduler::get().sync();
   dump_octave_image();
 #endif
-
+  t.begin();
   // Build Gaussian pyramid
   build_gaussian_pyramid();
+  t.end();
+  t.printTime("build_gaussian_pyramid");
+
 #if (DUMP_GAUSSIAN_PYRAMID_IMAGE == 1)
   // Make sure all the OpenCL jobs are done executing:
   CLScheduler::get().sync();
   dump_gaussian_pyramid_image();
 #endif
 
+  t.begin();
   // Build DoG pyramid
   build_dog_pyr();
+  t.end();
+  t.printTime("build_dog_pyr");
+
 #if (DUMP_DOG_IMAGE == 1)
   // Make sure all the OpenCL jobs are done executing:
   CLScheduler::get().sync();
   dump_dog_pyramid_image();
 #endif
 
+  t.begin();
   // Build Gradient/Rotation pyramid
   build_grd_rot_pyr();
+  t.end();
+  t.printTime("build_grd_rot_pyr");
 
 #ifdef ARM_COMPUTE_CL
   // Unmap buffer if creating a CLTensor
@@ -1603,11 +1618,17 @@ int EZSIFT<tensor,scale,conv,conv_matrix_size,absdif,deriv,gradrot>::sift(std::l
   }
 #endif
 
+  t.begin();
   // Detect keypoints
   detect_keypoints(kpt_list);
+  t.end();
+  t.printTime("detect_keypoints");
 
+  t.begin();
   // Extract keypoint descriptors
   extract_descriptor(kpt_list);
+  t.end();
+  t.printTime("extract_descriptor");
 
   return 0;
 }
